@@ -5,11 +5,20 @@ const currencyTable = document.getElementById("currency-table")
 
 const createCells = (currencyCodes) => {
   currencyCodes.forEach((code, i) => {
+    const currencyLabel = document.createElement("h4")
+    const currencyLabelText = document.createTextNode(code)
+    currencyLabel.appendChild(currencyLabelText)
+    const currencyRate = document.createElement("p")
+    const currencyRateText = document.createTextNode("1.0")
+    currencyRate.appendChild(currencyRateText)
+    currencyRate.id =`${code}-cell-value`
+
     const currencyDiv = document.createElement("div")
-    const currencyLabel = document.createTextNode(code)
     currencyDiv.appendChild(currencyLabel)
+    currencyDiv.appendChild(currencyRate)
     currencyDiv.className = "currency-cell"
-    currencyDiv.id = code
+    currencyDiv.id = `${code}-cell`
+    currencyDiv.addEventListener("click", getClickHandler(code))
     currencyTable.appendChild(currencyDiv)
   });
 }
@@ -40,6 +49,11 @@ const updateRates = (currencyCode) => {
 
 const getClickHandler = (currencyCode) => {
   return (event) => {
-    updateRates(currencyCode)
+    const previousSelected = currencyTable.querySelector('.selected-cell')
+    if (previousSelected) previousSelected.className = 'currency-cell'
+    const currencyCell = document.getElementById(`${currencyCode}-cell`)
+    currencyCell.className = 'selected-cell'
+    console.log(currencyCode + " was clicked")
+    // updateRates(currencyCode)
   }
 }

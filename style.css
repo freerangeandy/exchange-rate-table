@@ -4,6 +4,10 @@ body {
   text-align: center;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 h1 {
   color: green;
 }
@@ -17,16 +21,40 @@ h1 {
   margin: auto;
 }
 
-.currency-cell {
+.currency-cell, .selected-cell {
+  display: flex;
+  flex-direction: column;
   border: 2px solid black;
   background-color: white;
   min-width: 100px;
-  height: 50px;
+  height: 60px;
   font-size: 24px;
   text-align: center;
+
 }
 
-.selected {
-  border: 3px solid green;
-  background-color: yellow;
+.currency-cell h4 {
+  line-height: 24px;
+  margin:0;
+}
+
+.currency-cell p {
+  line-height: 24px;
+  margin:0;
+}
+
+.selected-cell {
+  border: 3px solid blue;
+}
+
+.selected-cell h4 {
+  line-height: 24px;
+  margin:0;
+  color: green
+}
+
+.selected-cell p {
+  line-height: 24px;
+  margin:0;  
+  color: green
 }
