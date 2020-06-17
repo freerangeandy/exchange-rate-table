@@ -30,11 +30,11 @@ h1 {
   height: 60px;
   font-size: 24px;
   text-align: center;
-
 }
 
 .currency-cell h4 {
   line-height: 24px;
+  padding-bottom: 2px;
   margin:0;
 }
 
@@ -57,6 +57,14 @@ h1 {
   line-height: 24px;
   margin:0;
   color: green
+}
+
+.base-input {
+  line-height: 18px;
+  font-size: 18px;
+  margin:0;
+  width: 80px;
+  margin:auto;
 }
 
 #hidden-rates {
