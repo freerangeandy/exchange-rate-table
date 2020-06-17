@@ -2,6 +2,7 @@ const API_KEY='e5baf86a22f226eda22c4226'
 const EXCHANGERATE_URL = 'https://v6.exchangerate-api.com/v6/'
 
 const currencyTable = document.getElementById("currency-table")
+const hiddenRateList = document.getElementById("hidden-rates")
 
 const createCells = (currencyCodes) => {
   currencyCodes.forEach((code, i) => {
@@ -9,9 +10,9 @@ const createCells = (currencyCodes) => {
     const currencyLabelText = document.createTextNode(code)
     currencyLabel.appendChild(currencyLabelText)
     const currencyRate = document.createElement("p")
-    const currencyRateText = document.createTextNode("1.0")
+    const currencyRateText = document.createTextNode("0.00")
     currencyRate.appendChild(currencyRateText)
-    currencyRate.id =`${code}-cell-value`
+    currencyRate.id = `${code}-cell-value`
 
     const currencyDiv = document.createElement("div")
     currencyDiv.appendChild(currencyLabel)
@@ -20,6 +21,10 @@ const createCells = (currencyCodes) => {
     currencyDiv.id = `${code}-cell`
     currencyDiv.addEventListener("click", getClickHandler(code))
     currencyTable.appendChild(currencyDiv)
+
+    const hiddenRateItem = document.createElement("li")
+    hiddenRateItem.id = `${code}`
+    hiddenRateList.appendChild(hiddenRateItem)
   });
 }
 
@@ -37,14 +42,22 @@ const loadCurrencies = () => {
     if (!exchangeData.error) {
       const currencyCodes = Object.keys(exchangeData.conversion_rates)
       createCells(currencyCodes)
+      loadRates(exchangeData.conversion_rates)
     }
   })
 }
 
-loadCurrencies()
+const loadRates = (conversionRates) => {
+  Object.entries(conversionRates).forEach(([code, rate], i) => {
+    console.log(`${code}: ${rate}`)
+    const hiddenRateItem = document.getElementById(`${code}`)
+    hiddenRateItem.innerHTML = rate
+  });
 
-const updateRates = (currencyCode) => {
-  fetch()
+}
+
+const updateDisplayRates = (currencyCode) => {
+  // const
 }
 
 const getClickHandler = (currencyCode) => {
@@ -53,7 +66,11 @@ const getClickHandler = (currencyCode) => {
     if (previousSelected) previousSelected.className = 'currency-cell'
     const currencyCell = document.getElementById(`${currencyCode}-cell`)
     currencyCell.className = 'selected-cell'
-    console.log(currencyCode + " was clicked")
-    // updateRates(currencyCode)
+    const currencyCellRate = document.getElementById(`${currencyCode}-cell-value`)
+    currencyCellRate.innerHTML = "1.00"
+    // console.log(currencyCode + " was clicked")
+    // updateDisplayRates(currencyCode)
   }
 }
+
+loadCurrencies()
