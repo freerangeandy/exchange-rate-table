@@ -23,6 +23,7 @@ const createCells = (currencyCodes) => {
     currencyTable.appendChild(currencyDiv)
 
     const hiddenRateItem = document.createElement("li")
+    hiddenRateItem.className = "hidden-item"
     hiddenRateItem.id = `${code}`
     hiddenRateList.appendChild(hiddenRateItem)
   });
@@ -48,7 +49,7 @@ const loadCurrencies = () => {
 }
 
 const loadRates = (conversionRates) => {
-  Object.entries(conversionRates).forEach(([code, rate], i) => {
+  Object.entries(conversionRates).forEach(([code, rate]) => {
     console.log(`${code}: ${rate}`)
     const hiddenRateItem = document.getElementById(`${code}`)
     hiddenRateItem.innerHTML = rate
@@ -56,8 +57,24 @@ const loadRates = (conversionRates) => {
 
 }
 
-const updateDisplayRates = (currencyCode) => {
-  // const
+const updateDisplayRates = (baseCode) => {
+  const otherCurrencyListItems = Array.from(document.getElementsByClassName("hidden-item"))
+  let newCurrencyRates = {}
+  const baseRate = document.getElementById(baseCode).innerHTML
+  otherCurrencyListItems.forEach(node => {
+    const otherCode = node.id
+    const newRate = parseFloat(node.innerHTML) / parseFloat(baseRate)
+    newCurrencyRates[node.id] = newRate
+  })
+
+  setDisplayRates(newCurrencyRates, baseCode)
+}
+
+const setDisplayRates = (allCurrencyRates, baseCode) => {
+  Object.entries(allCurrencyRates).forEach(([code, rate]) => {
+    const currencyRate = document.getElementById(`${code}-cell-value`)
+    currencyRate.innerHTML = rate.toFixed(3)
+  })
 }
 
 const getClickHandler = (currencyCode) => {
@@ -69,7 +86,7 @@ const getClickHandler = (currencyCode) => {
     const currencyCellRate = document.getElementById(`${currencyCode}-cell-value`)
     currencyCellRate.innerHTML = "1.00"
     // console.log(currencyCode + " was clicked")
-    // updateDisplayRates(currencyCode)
+    updateDisplayRates(currencyCode)
   }
 }
 
