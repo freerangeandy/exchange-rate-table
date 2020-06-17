@@ -43,6 +43,7 @@ const loadCurrencies = () => {
       const currencyCodes = Object.keys(exchangeData.conversion_rates)
       createCells(currencyCodes)
       loadRates(exchangeData.conversion_rates)
+      displayNewRates(exchangeData.conversion_rates, '')
     }
   })
 }
@@ -53,7 +54,6 @@ const loadRates = (conversionRates) => {
     const hiddenRateItem = document.getElementById(`${code}`)
     hiddenRateItem.innerHTML = rate
   });
-
 }
 
 const updateDisplayRates = (baseCode, baseMultiplier) => {
