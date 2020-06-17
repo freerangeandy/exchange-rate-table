@@ -2,15 +2,30 @@ const API_KEY='e5baf86a22f226eda22c4226'
 const EXCHANGERATE_URL = 'https://v6.exchangerate-api.com/v6/'
 
 const currencyTable = document.getElementById("currency-table")
+const hiddenRateList = document.getElementById("hidden-rates")
 
 const createCells = (currencyCodes) => {
   currencyCodes.forEach((code, i) => {
+    const currencyLabel = document.createElement("h4")
+    const currencyLabelText = document.createTextNode(code)
+    currencyLabel.appendChild(currencyLabelText)
+    const currencyRate = document.createElement("p")
+    const currencyRateText = document.createTextNode("0.00")
+    currencyRate.appendChild(currencyRateText)
+    currencyRate.id = `${code}-cell-value`
+
     const currencyDiv = document.createElement("div")
-    const currencyLabel = document.createTextNode(code)
     currencyDiv.appendChild(currencyLabel)
+    currencyDiv.appendChild(currencyRate)
     currencyDiv.className = "currency-cell"
-    currencyDiv.id = code
+    currencyDiv.id = `${code}-cell`
+    currencyDiv.addEventListener("click", getClickHandler(code))
     currencyTable.appendChild(currencyDiv)
+
+    const hiddenRateItem = document.createElement("li")
+    hiddenRateItem.className = "hidden-item"
+    hiddenRateItem.id = `${code}`
+    hiddenRateList.appendChild(hiddenRateItem)
   });
 }
 
@@ -28,18 +43,51 @@ const loadCurrencies = () => {
     if (!exchangeData.error) {
       const currencyCodes = Object.keys(exchangeData.conversion_rates)
       createCells(currencyCodes)
+      loadRates(exchangeData.conversion_rates)
     }
   })
 }
 
-loadCurrencies()
+const loadRates = (conversionRates) => {
+  Object.entries(conversionRates).forEach(([code, rate]) => {
+    console.log(`${code}: ${rate}`)
+    const hiddenRateItem = document.getElementById(`${code}`)
+    hiddenRateItem.innerHTML = rate
+  });
 
-const updateRates = (currencyCode) => {
-  fetch()
+}
+
+const updateDisplayRates = (baseCode) => {
+  const otherCurrencyListItems = Array.from(document.getElementsByClassName("hidden-item"))
+  let newCurrencyRates = {}
+  const baseRate = document.getElementById(baseCode).innerHTML
+  otherCurrencyListItems.forEach(node => {
+    const otherCode = node.id
+    const newRate = parseFloat(node.innerHTML) / parseFloat(baseRate)
+    newCurrencyRates[node.id] = newRate
+  })
+
+  setDisplayRates(newCurrencyRates, baseCode)
+}
+
+const setDisplayRates = (allCurrencyRates, baseCode) => {
+  Object.entries(allCurrencyRates).forEach(([code, rate]) => {
+    const currencyRate = document.getElementById(`${code}-cell-value`)
+    currencyRate.innerHTML = rate.toFixed(3)
+  })
 }
 
 const getClickHandler = (currencyCode) => {
   return (event) => {
-    updateRates(currencyCode)
+    const previousSelected = currencyTable.querySelector('.selected-cell')
+    if (previousSelected) previousSelected.className = 'currency-cell'
+    const currencyCell = document.getElementById(`${currencyCode}-cell`)
+    currencyCell.className = 'selected-cell'
+    const currencyCellRate = document.getElementById(`${currencyCode}-cell-value`)
+    currencyCellRate.innerHTML = "1.00"
+    // console.log(currencyCode + " was clicked")
+    updateDisplayRates(currencyCode)
   }
 }
+
+loadCurrencies()
