@@ -1,5 +1,4 @@
-const API_KEY='e5baf86a22f226eda22c4226'
-const EXCHANGERATE_URL = 'https://v6.exchangerate-api.com/v6/'
+const OPEN_EXCHANGERATE_URL = 'https://open.exchangerate-api.com/v6/'
 
 const currencyTable = document.getElementById("currency-table")
 const hiddenRateList = document.getElementById("hidden-rates")
@@ -30,7 +29,7 @@ const createCells = (currencyCodes) => {
 }
 
 const loadCurrencies = () => {
-  fetch(`${EXCHANGERATE_URL}${API_KEY}/latest/USD`)
+  fetch(`${OPEN_EXCHANGERATE_URL}latest`)
   .then(response => {
     if (response.ok) {
       return response.json()
@@ -40,10 +39,10 @@ const loadCurrencies = () => {
   })
   .then(exchangeData => {
     if (!exchangeData.error) {
-      const currencyCodes = Object.keys(exchangeData.conversion_rates)
+      const currencyCodes = Object.keys(exchangeData.rates)
       createCells(currencyCodes)
-      loadRates(exchangeData.conversion_rates)
-      displayNewRates(exchangeData.conversion_rates, '')
+      loadRates(exchangeData.rates)
+      displayNewRates(exchangeData.rates, '')
     }
   })
 }
