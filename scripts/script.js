@@ -6,11 +6,9 @@ const hiddenRateList = document.getElementById("hidden-rates")
 const createCells = (currencyCodes) => {
   currencyCodes.forEach((code, i) => {
     const currencyLabel = document.createElement("h4")
-    const currencyLabelText = document.createTextNode(code)
-    currencyLabel.appendChild(currencyLabelText)
+    currencyLabel.innerHTML = code
     const currencyRate = document.createElement("p")
-    const currencyRateText = document.createTextNode("0.00")
-    currencyRate.appendChild(currencyRateText)
+    currencyRate.innerHTML = "0.00"
     currencyRate.id = `${code}-cell-value`
 
     const currencyDiv = document.createElement("div")
